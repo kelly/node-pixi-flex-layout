@@ -11,31 +11,26 @@
     "flex",
     "yoga"
   ],
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "type": "module",
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/fireveined/pixi-flex-layout.git"
   },
   "scripts": {
-    "start": "parcel serve test/test.html",
-    "bundle:examples": "parcel build test/test.html",
-    "build": "tsc",
-    "watch": "parcel watch test/test.html",
-    "generate-doc": "rimraf -f doc/* && typedoc --out doc/ src/index.ts --ignoreCompilerErrors --mode file  --excludeNotExported --exclude 'test/*' --exclude 'node_modules/'"
+    "build": "tsc"
   },
   "license": "MIT",
   "devDependencies": {
     "@types/pixi.js": "^4.8.5",
     "@types/yoga-layout": "^1.9.1",
-    "javascript-editor": "^1.0.3",
-    "parcel-bundler": "^1.12.4",
-    "pixi.js": "^4.8.5",
-    "typedoc": "^0.17.3",
-    "typescript": "^3.8.3"
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.4.5"
   },
-  "peerDependencies": {},
   "dependencies": {
-    "yoga-layout-prebuilt-low-memory": "*"
+    "@pixi/node": "^7.3.0",
+    "pixi.js": "^7.4.2",
+    "yoga-layout": "^3.0.4"
   }
 }

@@ -1,12 +1,10 @@
-import { DisplayObject } from "pixi.js";
-import { YogaLayout } from "./YogaLayout";
-import TransformStatic = PIXI.TransformStatic;
+import { DisplayObject, Texture } from '@pixi/node';
+import { TransformStatic } from '@pixi'
+import { Layout } from "./Layout";
 
-const NineSlicePlane = (<any>PIXI).NineSlicePlane || (<any>PIXI).mesh.NineSlicePlane;
-
-declare module "pixi.js" {
+declare module "@pixi/node" {
     export interface DisplayObject {
-        yoga: YogaLayout;
+        yoga: Layout;
 
         /**
          * Internal property for fast checking if object has yoga
@@ -16,7 +14,7 @@ declare module "pixi.js" {
         /**
          * Applies yoga layout to DisplayObject
          */
-        updateYogaLayout(): void;
+        updateLayout(): void;
 
         /**
          * Checks boundaries of DisplayObject and emits NEED_LAYOUT_UPDATE if needed
@@ -25,9 +23,9 @@ declare module "pixi.js" {
     }
 
     interface DisplayObject {
-        _yogaLayoutHash: number;
-        _prevYogaLayoutHash: number;
-        __yoga: YogaLayout;
+        _LayoutHash: number;
+        _prevLayoutHash: number;
+        __yoga: Layout;
     }
 }
 
@@ -35,9 +33,10 @@ declare module "pixi.js" {
 export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.prototype) {
 
     Object.defineProperty(prototype, "yoga", {
+        configurable: true,
         get(): boolean {
             if (!this.__yoga) {
-                this.__yoga = new YogaLayout(this);
+                this.__yoga = new Layout(this);
                 this.__hasYoga = true;
             }
             return this.__yoga;
@@ -48,6 +47,7 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
     });
 
     Object.defineProperty(prototype, "visible", {
+        configurable: true,
         get(): boolean {
             return this._visible;
         },
@@ -82,7 +82,7 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
             }
         }
 
-        const texture: PIXI.Texture = (this as any)._texture;
+        const texture: Texture = (this as any)._texture;
         const bounds = (this as any)._bounds;
 
         if (texture) {
@@ -96,38 +96,38 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
                 this.__yoga.aspectRatio = texture.orig.width / texture.orig.height;
             }
 
-            this._yogaLayoutHash = tw * 0.12498 + th * 4121;
-            if (this._yogaLayoutHash !== this._prevYogaLayoutHash) {
+            this._LayoutHash = tw * 0.12498 + th * 4121;
+            if (this._LayoutHash !== this._prevLayoutHash) {
                 (<any>this.__yoga)._width === "pixi" && this.__yoga.node.setWidth(tw);
                 (<any>this.__yoga)._height === "pixi" && this.__yoga.node.setHeight(th);
-                this.emit(YogaLayout.NEED_LAYOUT_UPDATE);
+                this.emit(Layout.NEED_LAYOUT_UPDATE);
             }
 
-            this._prevYogaLayoutHash = this._yogaLayoutHash;
+            this._prevLayoutHash = this._LayoutHash;
 
         } else if (bounds) {
-            this._yogaLayoutHash = -1000000;
+            this._LayoutHash = -1000000;
 
             if ((<any>this.__yoga)._width === "pixi") {
                 let w = Math.round(bounds.maxX - bounds.minX);
                 this.__yoga.node.setWidth(w);
-                this._yogaLayoutHash += w * 0.2343;
+                this._LayoutHash += w * 0.2343;
             }
 
             if ((<any>this.__yoga)._height === "pixi") {
                 let h = Math.round(bounds.maxY - bounds.minY);
                 this.__yoga.node.setHeight(h);
-                this._yogaLayoutHash += h * 5121;
+                this._LayoutHash += h * 5121;
             }
 
-            if (this._yogaLayoutHash !== -1000000 && this._yogaLayoutHash !== this._prevYogaLayoutHash) {
-                this.emit(YogaLayout.NEED_LAYOUT_UPDATE);
+            if (this._LayoutHash !== -1000000 && this._LayoutHash !== this._prevLayoutHash) {
+                this.emit(Layout.NEED_LAYOUT_UPDATE);
             }
-            this._prevYogaLayoutHash = this._yogaLayoutHash;
+            this._prevLayoutHash = this._LayoutHash;
         }
     }
 
-    prototype.updateYogaLayout = function (this: DisplayObject) {
+    prototype.updateLayout = function (this: DisplayObject) {
         this.__yoga.update();
         const updated = this.__yoga.willLayoutWillBeRecomputed();
         const layout = this.__yoga.getComputedLayout();
@@ -145,13 +145,13 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
             }
 
             if (updated) {
-                this.emit(YogaLayout.AFTER_LAYOUT_UPDATED_EVENT, layout)
+                this.emit(Layout.AFTER_LAYOUT_UPDATED_EVENT, layout)
             }
         }
 
         for (let i = 0, j = this.__yoga.children.length; i < j; i++) {
             if (this.__yoga.children[i].target.visible) {
-                this.__yoga.children[i].target.updateYogaLayout()
+                this.__yoga.children[i].target.updateLayout()
             }
         }
     }

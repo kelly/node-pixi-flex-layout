@@ -1,50 +1,50 @@
-import * as yoga from "yoga-layout-prebuilt-low-memory";
+import Yoga from "yoga-layout";
 
 export namespace YogaConstants {
 
     export enum FlexDirection {
-        "column" = yoga.FLEX_DIRECTION_COLUMN,
-        "column-reverse" = yoga.FLEX_DIRECTION_COLUMN_REVERSE,
-        "row" = yoga.FLEX_DIRECTION_ROW,
-        "row-reverse" = yoga.FLEX_DIRECTION_ROW_REVERSE
+        "column" = Yoga.FLEX_DIRECTION_COLUMN,
+        "column-reverse" = Yoga.FLEX_DIRECTION_COLUMN_REVERSE,
+        "row" = Yoga.FLEX_DIRECTION_ROW,
+        "row-reverse" = Yoga.FLEX_DIRECTION_ROW_REVERSE
     }
 
 
     export enum JustifyContent {
-        "flex-start" = yoga.JUSTIFY_FLEX_START,
-        "flex-end" = yoga.JUSTIFY_FLEX_END,
-        "center" = yoga.JUSTIFY_CENTER,
-        "space-between" = yoga.JUSTIFY_SPACE_BETWEEN,
-        "space-around" = yoga.JUSTIFY_SPACE_AROUND,
-        "space-evenly" = yoga.JUSTIFY_SPACE_EVENLY
+        "flex-start" = Yoga.JUSTIFY_FLEX_START,
+        "flex-end" = Yoga.JUSTIFY_FLEX_END,
+        "center" = Yoga.JUSTIFY_CENTER,
+        "space-between" = Yoga.JUSTIFY_SPACE_BETWEEN,
+        "space-around" = Yoga.JUSTIFY_SPACE_AROUND,
+        "space-evenly" = Yoga.JUSTIFY_SPACE_EVENLY
     }
 
     export enum FlexWrap {
-        "wrap" = yoga.WRAP_WRAP,
-        "no-wrap" = yoga.WRAP_NO_WRAP,
-        "wrap-reverse" = yoga.WRAP_WRAP_REVERSE
+        "wrap" = Yoga.WRAP_WRAP,
+        "no-wrap" = Yoga.WRAP_NO_WRAP,
+        "wrap-reverse" = Yoga.WRAP_WRAP_REVERSE
     }
 
     export enum Align {
-        "stretch" = yoga.ALIGN_STRETCH,
-        "auto" = yoga.ALIGN_AUTO,
-        "baseline" = yoga.ALIGN_BASELINE,
-        "center" = yoga.ALIGN_CENTER,
-        "flex-start" = yoga.ALIGN_FLEX_START,
-        "flex-end" = yoga.ALIGN_FLEX_END,
-        "space-between" = yoga.ALIGN_SPACE_BETWEEN,
-        "space-around" = yoga.ALIGN_SPACE_AROUND,
+        "stretch" = Yoga.ALIGN_STRETCH,
+        "auto" = Yoga.ALIGN_AUTO,
+        "baseline" = Yoga.ALIGN_BASELINE,
+        "center" = Yoga.ALIGN_CENTER,
+        "flex-start" = Yoga.ALIGN_FLEX_START,
+        "flex-end" = Yoga.ALIGN_FLEX_END,
+        "space-between" = Yoga.ALIGN_SPACE_BETWEEN,
+        "space-around" = Yoga.ALIGN_SPACE_AROUND,
     }
 
 
     export enum PositionType {
-        "relative" = yoga.POSITION_TYPE_RELATIVE,
-        "absolute" = yoga.POSITION_TYPE_ABSOLUTE
+        "relative" = Yoga.POSITION_TYPE_RELATIVE,
+        "absolute" = Yoga.POSITION_TYPE_ABSOLUTE
     }
 
     export enum Display {
-        "flex" = yoga.DISPLAY_FLEX,
-        "none" = yoga.DISPLAY_NONE
+        "flex" = Yoga.DISPLAY_FLEX,
+        "none" = Yoga.DISPLAY_NONE
     }
 
     export enum YogaCustomSizeConfig {
@@ -53,7 +53,7 @@ export namespace YogaConstants {
         WINDOW_SIZE = "window"
     }
 
-    export const YogaEdges = [yoga.EDGE_TOP, yoga.EDGE_RIGHT, yoga.EDGE_BOTTOM, yoga.EDGE_LEFT];
+    export const YogaEdges = [Yoga.EDGE_TOP, Yoga.EDGE_RIGHT, Yoga.EDGE_BOTTOM, Yoga.EDGE_LEFT];
 
     export interface ComputedLayout {
         left: number;
@@ -64,4 +64,3 @@ export namespace YogaConstants {
         height: number;
     }
 }
-

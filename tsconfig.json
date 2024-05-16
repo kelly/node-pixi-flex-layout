@@ -1,19 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES2020",  // or a version of ECMAScript that suits your needs
+    "module": "ESNext",
     "lib": [
       "es2016",
-      "dom"
     ],
+    "allowJs": true,
+    "checkJs": false,
     "declaration": true,
-    "outDir": "./lib",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "strictNullChecks": false,
     "noImplicitAny": false
-  },
-  "files": [
-    "src/index.ts"
-  ]
+  }
 }

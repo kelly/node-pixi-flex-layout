@@ -1,15 +1,12 @@
-import * as PIXI from "pixi.js";
+import { WebGLRenderer, CanvasRenderer } from '@pixi';
+import { Ticker } from '@pixi/node';
 import { applyContainerPolyfill } from "./containerPolyfill";
 import { applyDisplayObjectPolyfill } from "./displayObjectPolyfill";
-import { yogaAnimationManager } from "./YogaAnimationManager";
+import { AnimationManager } from "./AnimationManager";
+import { Layout } from "./Layout";
 
-if (!(<any>window).PIXI) {
-    (<any>window).PIXI = PIXI;
-}
-import {YogaLayout} from "./YogaLayout";
-
-export { YogaLayout, IYogaAnimationConfig } from "./YogaLayout";
-export { YogaLayoutConfig } from "./YogaLayoutConfig";
+export { Layout, IYogaAnimationConfig } from "./Layout";
+export { LayoutConfig } from "./LayoutConfig";
 export * from "./YogaContants";
 
 export interface IFlexLayoutOptions {
@@ -20,11 +17,11 @@ export interface IFlexLayoutOptions {
  * Polyfills PIXI.DisplayObject and PIXI.Container
  *
  */
-export function initializeYogaLayout(options: IFlexLayoutOptions = {usePixiSharedTicker: true}) {
-    applyDisplayObjectPolyfill();
-    applyContainerPolyfill();
+export function initializeLayout(DisplayObject: DisplayObject, Container: Container, options: IFlexLayoutOptions = {usePixiSharedTicker: true}) {
+    applyDisplayObjectPolyfill(DisplayObject);
+    applyContainerPolyfill(Container);
     if (options.usePixiSharedTicker) {
-        PIXI.ticker.shared.add(delta => yogaAnimationManager.update(delta));
+        Ticker.shared.add(delta => AnimationManager.update(delta));
     }
 }
 
@@ -34,7 +31,7 @@ export function initializeYogaLayout(options: IFlexLayoutOptions = {usePixiShare
  * If renderer is set yoga boundBoxCheck/layotutUpdate in updateTransform will be called ONLY when rendering.
  * @param renderer
  */
-export function yogaSetRenderer(renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer) {
-    renderer.on("prerender", () => YogaLayout.isRendering = true)
-    renderer.on("postrender", () => YogaLayout.isRendering = false)
+export function layoutSetRenderer(renderer: WebGLRenderer | CanvasRenderer) {
+    renderer.on("prerender", () => Layout.isRendering = true)
+    renderer.on("postrender", () => Layout.isRendering = false)
 }

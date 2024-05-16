@@ -1,10 +1,9 @@
-import * as Yoga from "yoga-layout-prebuilt-low-memory";
-import * as PIXI from "pixi.js";
+import Yoga from "yoga-layout";
+import { Text, Sprite, DisplayObject } from '@pixi/node';
 import { YogaConstants } from "./YogaContants";
-import { YogaLayoutConfig } from "./YogaLayoutConfig";
-import { yogaAnimationManager } from "./YogaAnimationManager";
+import { LayoutConfig } from "./LayoutConfig";
+import { AnimationManager } from "./AnimationManager";
 import YogaEdges = YogaConstants.YogaEdges;
-import DisplayObject = PIXI.DisplayObject;
 import ComputedLayout = YogaConstants.ComputedLayout;
 import FlexDirection = YogaConstants.FlexDirection;
 import JustifyContent = YogaConstants.JustifyContent;
@@ -33,11 +32,11 @@ export interface IYogaAnimationConfig {
     time: number;
     easing: (progress: number) => number;
 
-    shouldRunAnimation?(yoga: YogaLayout, prev: ComputedLayout, newLayout: ComputedLayout): boolean;
+    shouldRunAnimation?(yoga: Layout, prev: ComputedLayout, newLayout: ComputedLayout): boolean;
 
 }
 
-export class YogaLayout {
+export class Layout {
 
     /**
      * Internal value. True if we are currently in WebGLRenderer.render() (based on 'prerender' and 'postrender' events). Used to skip some updateTransform calls.
@@ -47,14 +46,14 @@ export class YogaLayout {
     /**
      * Experimental feature for building layouts independent of pixi tree
      */
-    public static roots: Map<string, YogaLayout> = new Map();
+    public static roots: Map<string, Layout> = new Map();
     public static readonly LAYOUT_UPDATED_EVENT = "LAYOUT_UPDATED_EVENT";
     public static readonly AFTER_LAYOUT_UPDATED_EVENT = "AFTER_LAYOUT_UPDATED_EVENT";
     public static readonly NEED_LAYOUT_UPDATE = "NEED_LAYOUT_UPDATE";
     public readonly target: DisplayObject;
     public readonly node: Yoga.YogaNode;
-    public children: YogaLayout[] = [];
-    public parent?: YogaLayout;
+    public children: Layout[] = [];
+    public parent?: Layout;
 
 
     /**
@@ -112,27 +111,27 @@ export class YogaLayout {
             this.width = this.height = "auto";
         }
 
-        if (pixiObject instanceof PIXI.Text || pixiObject instanceof PIXI.Sprite) {
+        if (pixiObject instanceof Text || pixiObject instanceof Sprite) {
             this.keepAspectRatio = true;
         }
 
-        if (pixiObject instanceof PIXI.Text) {
+        if (pixiObject instanceof Text) {
             this.aspectRatioMainDiemension = "width";
         }
 
         // broadcast event
-        pixiObject.on(YogaLayout.LAYOUT_UPDATED_EVENT as any, () => {
+        pixiObject.on(Layout.LAYOUT_UPDATED_EVENT as any, () => {
             this._lastLayout = this._cachedLayout;
             this._cachedLayout = undefined;
-            this.children.forEach(child => child.target.emit(YogaLayout.LAYOUT_UPDATED_EVENT))
+            this.children.forEach(child => child.target.emit(Layout.LAYOUT_UPDATED_EVENT))
         })
 
-        pixiObject.on(YogaLayout.NEED_LAYOUT_UPDATE as any, () => {
+        pixiObject.on(Layout.NEED_LAYOUT_UPDATE as any, () => {
             // size change of this element wont change size/positions of its parent, so there is no need to update whole tree
             if (!this.parent /*|| (this.hasContantDeclaredSize && this.parent.width !== "auto" && this.parent.height !== "auto")*/) {
                 this._needUpdateAsRoot = true;
             } else {
-                this.parent.target.emit(YogaLayout.NEED_LAYOUT_UPDATE)
+                this.parent.target.emit(Layout.NEED_LAYOUT_UPDATE)
             }
         })
     }
@@ -142,7 +141,7 @@ export class YogaLayout {
     }
 
     public set root(val: string) {
-        const root = YogaLayout.roots.get(val);
+        const root = Layout.roots.get(val);
         if (root) {
             root.addChild(this);
         }
@@ -152,7 +151,7 @@ export class YogaLayout {
      * Assigns given properties to this yoga layout
      * @param config
      */
-    public fromConfig(config: YogaLayoutConfig) {
+    public fromConfig(config: LayoutConfig) {
         Object.assign(this, config);
     }
 
@@ -160,15 +159,15 @@ export class YogaLayout {
      * Same as 'fromConfig()'
      * @param config
      */
-    public set config(config: YogaLayoutConfig) {
+    public set config(config: LayoutConfig) {
         this.fromConfig(config);
     }
 
     /**
-     * Copies all properties (styles, size, rescaleToYoga etc) from other YogaLayout objects
+     * Copies all properties (styles, size, rescaleToYoga etc) from other Layout objects
      * @param layout
      */
-    public copy(layout: YogaLayout): void {
+    public copy(layout: Layout): void {
         this.node.copyStyle(layout.node);
         this.rescaleToYoga = layout.rescaleToYoga;
         this.aspectRatio = layout.aspectRatio;
@@ -185,7 +184,7 @@ export class YogaLayout {
         this.node.setHeight("auto");
     }
 
-    public addChild(yoga: YogaLayout, index = this.node.getChildCount()): void {
+    public addChild(yoga: Layout, index = this.node.getChildCount()): void {
         if (yoga.parent) {
             yoga.parent.removeChild(yoga);
         }
@@ -196,7 +195,7 @@ export class YogaLayout {
     }
 
 
-    public removeChild(yoga: YogaLayout): void {
+    public removeChild(yoga: Layout): void {
         const length = this.children.length;
         this.children = this.children.filter(child => child !== yoga);
         if (length !== this.children.length) {
@@ -209,7 +208,7 @@ export class YogaLayout {
      * Mark object as dirty and request layout recalculation
      */
     public requestLayoutUpdate(): void {
-        this.target.emit(YogaLayout.NEED_LAYOUT_UPDATE);
+        this.target.emit(Layout.NEED_LAYOUT_UPDATE);
     }
 
     public recalculateLayout(): void {
@@ -217,7 +216,7 @@ export class YogaLayout {
         this.node.calculateLayout();
         this._lastRecalculationDuration = performance.now() - start;
         // console.log("recalculated: ", this._lastRecalculationDuration, this)
-        this.target.emit(YogaLayout.LAYOUT_UPDATED_EVENT);
+        this.target.emit(Layout.LAYOUT_UPDATED_EVENT);
     }
 
     public update(): void {
@@ -293,7 +292,7 @@ export class YogaLayout {
                     easing: this.animationConfig.easing
                 }
 
-                yogaAnimationManager.add(this._animation);
+                AnimationManager.add(this._animation);
             } else {
                 this._animation = <any>{
                     curX: this._cachedLayout.left,

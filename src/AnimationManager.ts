@@ -1,6 +1,6 @@
-import { IAnimationState } from "./YogaLayout";
+import { IAnimationState } from "./Layout";
 
-export class YogaAnimationManager {
+export class LayoutAnimationManager {
 
     public animations: IAnimationState[] = [];
 
@@ -36,4 +36,4 @@ export class YogaAnimationManager {
     }
 }
 
-export const yogaAnimationManager = new YogaAnimationManager();
+export const AnimationManager = new LayoutAnimationManager();
