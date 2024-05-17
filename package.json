@@ -19,7 +19,8 @@
     "url": "https://github.com/fireveined/pixi-flex-layout.git"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "tsc"
   },
   "license": "MIT",
   "devDependencies": {
