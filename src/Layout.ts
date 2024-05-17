@@ -1,8 +1,8 @@
 import Yoga from "yoga-layout";
 import { Text, Sprite, DisplayObject } from '@pixi/node';
-import { YogaConstants } from "./YogaContants";
-import { LayoutConfig } from "./LayoutConfig";
-import { AnimationManager } from "./AnimationManager";
+import { YogaConstants } from "./YogaContants.js";
+import { LayoutConfig } from "./LayoutConfig.js";
+import { AnimationManager } from "./AnimationManager.js";
 import YogaEdges = YogaConstants.YogaEdges;
 import ComputedLayout = YogaConstants.ComputedLayout;
 import FlexDirection = YogaConstants.FlexDirection;

@@ -1,13 +1,13 @@
 import { WebGLRenderer, CanvasRenderer } from '@pixi';
 import { Ticker } from '@pixi/node';
-import { applyContainerPolyfill } from "./containerPolyfill";
-import { applyDisplayObjectPolyfill } from "./displayObjectPolyfill";
-import { AnimationManager } from "./AnimationManager";
-import { Layout } from "./Layout";
+import { applyContainerPolyfill } from "./containerPolyfill.js";
+import { applyDisplayObjectPolyfill } from "./displayObjectPolyfill.js";
+import { AnimationManager } from "./AnimationManager.js";
+import { Layout } from "./Layout.js";
 
-export { Layout, IYogaAnimationConfig } from "./Layout";
-export { LayoutConfig } from "./LayoutConfig";
-export * from "./YogaContants";
+export { Layout, IYogaAnimationConfig } from "./Layout.js";
+export { LayoutConfig } from "./LayoutConfig.js";
+export * from "./YogaContants.js";
 
 export interface IFlexLayoutOptions {
     usePixiSharedTicker: boolean;

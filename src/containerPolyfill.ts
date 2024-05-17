@@ -1,4 +1,4 @@
-import { Layout } from "./Layout";
+import { Layout } from "./Layout.js";
 import { Container } from '@pixi/node';
 
 declare module "@pixi/node" {
@@ -26,7 +26,7 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
         set(newFlex: boolean): void {
             if (!this.flex && newFlex) {
                 this.children.forEach(child => {
-                    this.yoga.addChild(child.yoga);
+                    this.layout.addChild(child.layout);
                     if (this.flexRecursive && child instanceof Container && child.flex !== false) {
                         child.flexRecursive = true;
                     }
@@ -36,7 +36,7 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
 
             if (this.flex && !newFlex) {
                 this.children.forEach(child => {
-                    this.yoga.removeChild(child.yoga);
+                    this.layout.removeChild(child.layout);
                 });
             }
             this.__flex = newFlex;
@@ -64,9 +64,9 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
         if (children.length === 1) {
             const child = children[0];
             if (this.flex) {
-                child.yoga = child.yoga || new Layout(child);
+                child.layout = child.layout || new Layout(child);
                 child.__hasYoga = true;
-                this.yoga.addChild(child.yoga);
+                this.layout.addChild(child.layout);
             }
 
             if (this.flexRecursive && child instanceof Container && child.flex !== false) {
@@ -80,9 +80,9 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
 
     proto.addChildAt = function (child, index) {
         if (this.flex) {
-            child.yoga = child.yoga || new Layout(child);
+            child.layout = child.layout || new Layout(child);
             this.__hasYoga = true;
-            this.yoga.addChild(child.yoga, index);
+            this.layout.addChild(child.layout, index);
         }
 
         if (this.flexRecursive && child instanceof Container && child.flex !== false) {
@@ -97,7 +97,7 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
         if (children.length === 1) {
             const child = children[0];
             if (this.flex) {
-                this.yoga.removeChild(child.yoga);
+                this.layout.removeChild(child.layout);
             }
             this.emit(Layout.NEED_LAYOUT_UPDATE);
         }
@@ -112,7 +112,7 @@ export function applyContainerPolyfill(proto: any = Container.prototype) {
 
             if (range > 0 && range <= end) {
                 const removed = this.children.slice(begin, range);
-                removed.forEach(child => child.__hasYoga && this.yoga.removeChild(child.yoga))
+                removed.forEach(child => child.__hasYoga && this.layout.removeChild(child.layout))
             }
             this.emit(Layout.NEED_LAYOUT_UPDATE);
         }

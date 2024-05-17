@@ -23,14 +23,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/pixi.js": "^4.8.5",
+    "@types/pixi.js": "^5.0.0",
     "@types/yoga-layout": "^1.9.1",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "@pixi/node": "^7.3.0",
-    "pixi.js": "^7.4.2",
     "yoga-layout": "^3.0.4"
   }
 }

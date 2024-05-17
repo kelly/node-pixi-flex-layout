@@ -1,6 +1,6 @@
 import { DisplayObject, Texture } from '@pixi/node';
 import { TransformStatic } from '@pixi'
-import { Layout } from "./Layout";
+import { Layout } from "./Layout.js";
 
 declare module "@pixi/node" {
     export interface DisplayObject {
@@ -32,7 +32,7 @@ declare module "@pixi/node" {
 
 export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.prototype) {
 
-    Object.defineProperty(prototype, "yoga", {
+    Object.defineProperty(prototype, "layout", {
         configurable: true,
         get(): boolean {
             if (!this.__yoga) {
@@ -62,11 +62,11 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
     const destroy = prototype.destroy;
     prototype.destroy = function () {
         if (this.__hasYoga) {
-            this.yoga.children = [];
-            this.yoga.node.free();
-            this.yoga.parent = undefined;
+            this.layout.children = [];
+            this.layout.node.free();
+            this.layout.parent = undefined;
             this.__hasYoga = false;
-            delete this.yoga;
+            delete this.layout;
         }
         destroy.call(this);
     }
