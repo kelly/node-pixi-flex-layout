@@ -1,5 +1,5 @@
 import Yoga from "yoga-layout";
-import { Text, Sprite, DisplayObject } from '@pixi/node';
+import { Text, BitmapText, Sprite, DisplayObject } from '@pixi/node';
 import { YogaConstants } from "./YogaContants.js";
 import { AnimationManager } from "./AnimationManager.js";
 var YogaEdges = YogaConstants.YogaEdges;
@@ -33,10 +33,10 @@ export class Layout {
         else {
             this.width = this.height = "auto";
         }
-        if (pixiObject instanceof Text || pixiObject instanceof Sprite) {
+        if (pixiObject instanceof Text || pixiObject instanceof Sprite || pixiObject instanceof BitmapText) {
             this.keepAspectRatio = true;
         }
-        if (pixiObject instanceof Text) {
+        if (pixiObject instanceof Text || pixiObject instanceof BitmapText) {
             this.aspectRatioMainDiemension = "width";
         }
         // broadcast event
@@ -311,6 +311,7 @@ export class Layout {
         // @ts-ignore
         return YogaConstants.Align[this.node.getAlignSelf()];
     }
+
     set flexWrap(wrap) {
         this.node.setFlexWrap(YogaConstants.FlexWrap[wrap]);
         this.requestLayoutUpdate();

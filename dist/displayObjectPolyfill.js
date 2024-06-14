@@ -48,7 +48,7 @@ export function applyDisplayObjectPolyfill(prototype = DisplayObject.prototype) 
         }
         const texture = this._texture;
         const bounds = this._bounds;
-        if (texture) {
+        if (texture && texture.orig) {
             let tw = Math.abs(this.__yoga.rescaleToYoga ? 1 : this.scale.x) * texture.orig.width;
             let th = Math.abs(this.__yoga.rescaleToYoga ? 1 : this.scale.y) * texture.orig.height;
             if (!this.__yoga.rescaleToYoga && this.updateHorizontalVertices /* Is NineSlicePlane?*/) {

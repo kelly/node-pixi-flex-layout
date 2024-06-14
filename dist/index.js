@@ -25,3 +25,8 @@ export function layoutSetRenderer(renderer) {
     renderer.on("prerender", () => Layout.isRendering = true);
     renderer.on("postrender", () => Layout.isRendering = false);
 }
+
+export function removeLayoutRenderer(renderer) {
+    renderer.off("prerender");
+    renderer.off("postrender");
+}

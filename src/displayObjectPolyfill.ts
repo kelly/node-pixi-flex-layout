@@ -85,7 +85,7 @@ export function applyDisplayObjectPolyfill(prototype: any = DisplayObject.protot
         const texture: Texture = (this as any)._texture;
         const bounds = (this as any)._bounds;
 
-        if (texture) {
+        if (texture && texture.orig) {
             let tw = Math.abs(this.__yoga.rescaleToYoga ? 1 : this.scale.x) * texture.orig.width;
             let th = Math.abs(this.__yoga.rescaleToYoga ? 1 : this.scale.y) * texture.orig.height;
 
